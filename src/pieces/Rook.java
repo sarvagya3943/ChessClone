@@ -4,6 +4,11 @@ import game.Cell;
 
 import java.util.ArrayList;
 
+/*
+ * Rook class (or the haathi piece for the hindi medium people) 
+ * can only move vertically and horizontally
+ */
+
 public class Rook extends Piece {
 
 	public Rook(String id , String path , PieceColor color) {
@@ -14,6 +19,8 @@ public class Rook extends Piece {
 
 	@Override
 	public ArrayList<Cell> getMoves(Cell[][] arr, int r, int c) {
+		
+		movesPossible.clear(); 
 		
 		for(int _c = c + 1 ; _c < 8 ; ++_c) {
 			if(arr[r][_c].getPiece() == null) {
