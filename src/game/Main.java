@@ -38,6 +38,6 @@ public class Main extends JFrame {
 		content.setBackground(Color.BLACK) ;
 		content.setLayout(new BorderLayout()) ; 
 		setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE) ;
-		JSplitPane
+		
 	}
 }

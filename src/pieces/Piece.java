@@ -1,21 +1,27 @@
 package pieces;
 
+import game.Cell;
+
+import java.util.ArrayList;
+
 /*
  * Every chess piece would extend this class. 
  */
 public abstract class Piece implements Cloneable {
 
-	private int color ; 
+	private PieceColor color ; 
 	private String id = null ; 
 	private String path ; 
+	protected ArrayList<Cell> movesPossible = new ArrayList<Cell>() ;  
+	public abstract ArrayList<Cell> getMoves(Cell arr[][] , int r , int c) ; 
 	
 	// color setter 
-	public void setColor(int color) {
+	public void setColor(PieceColor color) {
 		this.color = color ; 
 	}
 	
 	// color getter 
-	public int getColor() {
+	public PieceColor getColor() {
 		return this.color ; 
 	}
 	
