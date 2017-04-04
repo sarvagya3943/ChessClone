@@ -5,6 +5,7 @@ import java.awt.Color;
 import java.awt.Container;
 
 import javax.swing.JFrame;
+import javax.swing.JSplitPane;
 
 @SuppressWarnings("serial")
 public class Main extends JFrame {
@@ -36,6 +37,7 @@ public class Main extends JFrame {
 		content = getContentPane() ; 
 		content.setBackground(Color.BLACK) ;
 		content.setLayout(new BorderLayout()) ; 
-		setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE) ; 
+		setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE) ;
+		JSplitPane
 	}
 }
