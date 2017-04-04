@@ -32,6 +32,10 @@ public class Cell extends JPanel {
 		label = new JLabel(image) ; 
 		this.add(label) ; 
 	}
+	// returns true if (r,c) lies in the board 
+	public static boolean valid(int r,int c) {
+		return (r >= 0 && r < 8 && c >= 0 && c < 8) ; 
+	}
 	
 	public Piece getPiece() {
 		return this.piece ; 
