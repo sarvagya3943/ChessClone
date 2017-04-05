@@ -14,6 +14,7 @@ import pieces.Piece;
  */
 public class Cell extends JPanel {
 
+	private static final long serialVersionUID = 1L ;
 	public int r,c ; // everybody needs access to this  
 	private Piece piece ; 
 	private JLabel label ; 

@@ -43,8 +43,10 @@ import pieces.PieceColor;
 import pieces.Queen;
 import pieces.Rook;
 
-@SuppressWarnings("serial")
+
 public class Main extends JFrame implements MouseListener {
+	
+	private static final long serialVersionUID = 1L ;
 	// width of the game board 
 	private static final int width = 1110 ;
 	// height of the game board 
@@ -160,7 +162,7 @@ public class Main extends JFrame implements MouseListener {
 		timeSlider.setPaintTicks(true) ; 
 		timeSlider.addChangeListener(new TimeChanges()) ; 
 		
-		/*white_players = Player.getPlayers() ;
+		white_players = Player.getPlayers() ;
 		for(Player player : white_players) {
 			white_player_names.add(player.getName()) ;
 		}
@@ -171,7 +173,7 @@ public class Main extends JFrame implements MouseListener {
 		
 		white_player_Names = white_player_names.toArray(white_player_Names) ; 
 		black_player_Names = black_player_names.toArray(black_player_Names) ;
-		*/
+		
 		chess_board.setBorder(BorderFactory.createLoweredBevelBorder());
 		
 		setSize(width, height) ; 
@@ -195,8 +197,8 @@ public class Main extends JFrame implements MouseListener {
 		JPanel white_stats = new JPanel(new GridLayout()) ; 
 		JPanel black_stats = new JPanel(new GridLayout()) ;
 		
-		/*white_com = new JComboBox<String>(white_player_Names) ;
-		black_com = new JComboBox<String>(black_player_Names) ;*/
+		white_com = new JComboBox<String>(white_player_Names) ;
+		black_com = new JComboBox<String>(black_player_Names) ;
 		
 		white_scroll = new JScrollPane(white_com) ;
 		black_scroll = new JScrollPane(black_com) ;
@@ -302,6 +304,8 @@ public class Main extends JFrame implements MouseListener {
 					temp = white_queen ; 
 				}
 				Cell cell = new Cell(i, j, temp) ; 
+				cell.addMouseListener(this) ;
+				chess_board.add(cell) ;
 				grid[i][j] = cell ; 
 			}
 		}
@@ -315,7 +319,7 @@ public class Main extends JFrame implements MouseListener {
 		start = new Button("Start") ;
 		start.setBackground(Color.BLACK) ; 
 		start.setForeground(Color.WHITE) ;
-		//start.addActionListener(new GameStarter()) ; 
+		start.addActionListener(new GameStarter()) ; 
 		start.setPreferredSize(new Dimension(120,40)) ;
 		
 		label = new JLabel("Time Starts Now" , JLabel.CENTER) ;
@@ -447,10 +451,13 @@ public class Main extends JFrame implements MouseListener {
 		if(!gameEndedYet && timer != null) {
 			timer.resetTimer() ; 
 			timer.startTimer() ; 
+			show_player.remove(current_player) ; 
 			if(Main.playerTurn == "White") {
 				Main.playerTurn = "Black" ; 
 			}
 			else Main.playerTurn = "White" ;
+			current_player.setText(Main.playerTurn) ; 
+			show_player.add(current_player) ; 
 		}
 	}
 	
@@ -509,10 +516,47 @@ public class Main extends JFrame implements MouseListener {
 	
 	private void GameEnded() {
 		cleanToList(toList) ; 
+		TimeDisplay.disable() ; 
 		timer.countDown.stop() ;
 		if(previousCell != null) {
 			previousCell.removePiece() ; 
 		}
+		if(turn == PieceColor.WHITE) {
+			whitePlayer.updateGamesWon() ; 
+			whitePlayer.UpdatePlayer() ; 
+			winner_name = whitePlayer.getName() ; 
+		}
+		else {
+			blackPlayer.updateGamesWon() ; 
+			blackPlayer.UpdatePlayer() ; 
+			winner_name = blackPlayer.getName() ; 
+		}
+		
+		JOptionPane.showMessageDialog(chess_board, "Checkmate !!!\n" + winner_name + "wins :)" ) ; 
+		white_player.remove(white_details) ; 
+		black_player.remove(black_details) ;
+		TimeDisplay.remove(label) ;
+		
+		TimeDisplay.add(start) ; 
+		show_player.remove(current_move) ; 
+		show_player.remove(current_player) ;
+		show_player.revalidate() ; 
+		show_player.add(timeSlider) ;
+		
+		split_bar.remove(chess_board) ; 
+		split_bar.add(game_not_started) ; 
+		
+		white_new_player.enable() ; 
+		black_new_player.enable() ;
+		white_select.enable() ; 
+		black_select.enable() ; 
+		
+		gameEndedYet = true ; 
+		gameBoard.disable() ; 
+		gameBoard.dispose() ; 
+		gameBoard = new Main() ; 
+		gameBoard.setVisible(true) ; 
+		gameBoard.setResizable(false) ; 
 	}
 	
 	@Override
@@ -666,7 +710,7 @@ public class Main extends JFrame implements MouseListener {
 			JComboBox<String> jC = (color == PieceColor.WHITE) ? white_com : black_com ; 
 			JComboBox<String> ojC = (color == PieceColor.WHITE) ? black_com : white_com ; 
 			ArrayList<Player> players = (color == PieceColor.WHITE) ? white_players : black_players ; 
-			ArrayList<Player> oplayers = players.getPlayers() ; 
+			ArrayList<Player> oplayers = Player.getPlayers() ; 
 			if(oplayers.isEmpty()) return ; 
 			JPanel details = (color == PieceColor.WHITE) ? white_details : black_details ; 
 			JPanel pl = (color == PieceColor.WHITE) ? white_player : black_player ;
@@ -688,7 +732,7 @@ public class Main extends JFrame implements MouseListener {
 					break ; 
 				}
 			}
-			if(tempPlayer == null) break ; 
+			if(tempPlayer == null) return ; 
 			if(color == PieceColor.WHITE) {
 				whitePlayer = tempPlayer ; 
 			}
@@ -735,7 +779,7 @@ public class Main extends JFrame implements MouseListener {
 				}
 				if(curString.length() != 0) {
 					Player res = new Player(curString) ; 
-					res.updatePlayer() ; 
+					res.UpdatePlayer() ; 
 					if(color == PieceColor.WHITE) {
 						whitePlayer = res ; 
 					}
@@ -771,10 +815,10 @@ public class Main extends JFrame implements MouseListener {
 			}
 			
 			whitePlayer.updateGamesPlayed() ; 
-			whitePlayer.updatePlayer() ; 
+			whitePlayer.UpdatePlayer() ; 
 			
 			blackPlayer.updateGamesPlayed() ; 
-			blackPlayer.updatePlayer() ; 
+			blackPlayer.UpdatePlayer() ; 
 			
 			white_new_player.disable() ; 
 			black_new_player.disable() ;

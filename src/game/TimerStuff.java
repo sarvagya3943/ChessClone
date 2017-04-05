@@ -15,7 +15,7 @@ public class TimerStuff {
 	public TimerStuff(JLabel label) {
 		this.label = label ; 
 		countDown = new Timer(1000, new countDownListener()) ; 
-		//remainingTime = Main.TimeRemaining ; 
+		remainingTime = Main.TimeRemaining ; 
 	}
 	
 	public void startTimer() {
@@ -23,7 +23,7 @@ public class TimerStuff {
 	}
 	
 	public void resetTimer() {
-		//remainingTime = Main.TimeRemaining ; 
+		remainingTime = Main.TimeRemaining ; 
 	}
 	
 	class countDownListener implements ActionListener {
