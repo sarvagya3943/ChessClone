@@ -74,7 +74,7 @@ public class Main extends JFrame implements MouseListener {
 	private JPanel black_combo_panel , white_combo_panel ; 
 	private JPanel white_player , black_player ;
 	private ArrayList<String> white_player_names , black_player_names ; 
-	private String[] white_player_Names , black_player_Names ;  
+	private String[] white_player_Names = {} , black_player_Names = {} ;  
 	private ArrayList<Player> white_players , black_players ; 
 	private static String playerTurn ;
 	private JSplitPane split_bar ; 
@@ -97,33 +97,33 @@ public class Main extends JFrame implements MouseListener {
 	public static void main(String[] args) 
 	{
 		// initialise the variables 
-		white_rook1 = new Rook("white_rook1", "White_Rook.png", PieceColor.WHITE) ; 
-		white_rook2 = new Rook("white_rook2", "White_Rook.png", PieceColor.WHITE) ; 
-		black_rook1 = new Rook("black_rook1", "Black_Rook.png", PieceColor.BLACK) ; 
-		black_rook2 = new Rook("black_rook2", "Black_Rook.png", PieceColor.BLACK) ;
+		white_rook1 = new Rook("white_rook1", "/White_Rook.png", PieceColor.WHITE) ; 
+		white_rook2 = new Rook("white_rook2", "/White_Rook.png", PieceColor.WHITE) ; 
+		black_rook1 = new Rook("black_rook1", "/Black_Rook.png", PieceColor.BLACK) ; 
+		black_rook2 = new Rook("black_rook2", "/Black_Rook.png", PieceColor.BLACK) ;
 		
-		white_bishop1 = new Bishop("white_bishop1", "White_Bishop.png", PieceColor.WHITE) ; 
-		white_bishop2 = new Bishop("white_bishop2", "White_Bishop.png", PieceColor.WHITE) ;
-		black_bishop1 = new Bishop("black_bishop1", "Black_Bishop.png", PieceColor.BLACK) ;
-		black_bishop2 = new Bishop("black_bishop2", "Black_Bishop.png", PieceColor.BLACK) ;
+		white_bishop1 = new Bishop("white_bishop1", "/White_Bishop.png", PieceColor.WHITE) ; 
+		white_bishop2 = new Bishop("white_bishop2", "/White_Bishop.png", PieceColor.WHITE) ;
+		black_bishop1 = new Bishop("black_bishop1", "/Black_Bishop.png", PieceColor.BLACK) ;
+		black_bishop2 = new Bishop("black_bishop2", "/Black_Bishop.png", PieceColor.BLACK) ;
 		
-		white_knight1 = new Knight("white_knight1", "White_Knight.png", PieceColor.WHITE) ; 
-		white_knight2 = new Knight("white_knight2", "White_Knight.png", PieceColor.WHITE) ;
-		black_knight1 = new Knight("black_knight1", "Black_Knight.png", PieceColor.BLACK) ;
-		black_knight2 = new Knight("black_knight2", "Black_Knight.png", PieceColor.BLACK) ;
+		white_knight1 = new Knight("white_knight1", "/White_Knight.png", PieceColor.WHITE) ; 
+		white_knight2 = new Knight("white_knight2", "/White_Knight.png", PieceColor.WHITE) ;
+		black_knight1 = new Knight("black_knight1", "/Black_Knight.png", PieceColor.BLACK) ;
+		black_knight2 = new Knight("black_knight2", "/Black_Knight.png", PieceColor.BLACK) ;
 		
-		white_queen = new Queen("white_queen", "White_Queen.png", PieceColor.WHITE) ;
-		black_queen = new Queen("black_queen", "Black_Queen.png", PieceColor.BLACK) ;
+		white_queen = new Queen("white_queen", "/White_Queen.png", PieceColor.WHITE) ;
+		black_queen = new Queen("black_queen", "/Black_Queen.png", PieceColor.BLACK) ;
 		
-		white_king = new King("white_king", "White_King.png", PieceColor.WHITE,7,3) ;
-		black_king = new King("black_king", "Black_King.png", PieceColor.BLACK,0,3) ;
+		white_king = new King("white_king", "/White_King.png", PieceColor.WHITE,7,3) ;
+		black_king = new King("black_king", "/Black_King.png", PieceColor.BLACK,0,3) ;
 		
 		white_pawns = new Pawn[8] ; 
 		black_pawns = new Pawn[8] ;
 		
 		for(int i = 0 ; i < 8 ; ++i) {
-			white_pawns[i] = new Pawn("white_pawn" + (i + 1), "White_Pawn.png", PieceColor.WHITE) ; 
-			black_pawns[i] = new Pawn("black_pawn" + (i + 1), "Black_Pawn.png", PieceColor.BLACK) ; 
+			white_pawns[i] = new Pawn("white_pawn" + (i + 1), "/White_Pawn.png", PieceColor.WHITE) ; 
+			black_pawns[i] = new Pawn("black_pawn" + (i + 1), "/Black_Pawn.png", PieceColor.BLACK) ; 
 		}
 		
 		// set up the main board 
@@ -194,8 +194,8 @@ public class Main extends JFrame implements MouseListener {
 		black_player.setBorder(BorderFactory.createTitledBorder(null, "Black Player", TitledBorder.TOP,TitledBorder.CENTER, new Font("times new roman",Font.BOLD,18), Color.BLUE));
 		black_player.setLayout(new BorderLayout()) ;
 		
-		JPanel white_stats = new JPanel(new GridLayout()) ; 
-		JPanel black_stats = new JPanel(new GridLayout()) ;
+		JPanel white_stats = new JPanel(new GridLayout(3,3)) ; 
+		JPanel black_stats = new JPanel(new GridLayout(3,3)) ;
 		
 		white_com = new JComboBox<String>(white_player_Names) ;
 		black_com = new JComboBox<String>(black_player_Names) ;
@@ -230,13 +230,13 @@ public class Main extends JFrame implements MouseListener {
 		white_player.add(white_combo_panel , BorderLayout.NORTH) ; 
 		black_player.add(black_combo_panel , BorderLayout.NORTH) ; 
 	
-		white_stats.add(new JLabel("Player Name  : ")) ;
-		white_stats.add(new JLabel("Games Played : ")) ;
-		white_stats.add(new JLabel("Games Won    : ")) ;
+		white_stats.add(new JLabel("Player Name   : ")) ;
+		white_stats.add(new JLabel("Games Played  : ")) ;
+		white_stats.add(new JLabel("Games Won     : ")) ;
 		
-		black_stats.add(new JLabel("Player Name  : ")) ;
-		black_stats.add(new JLabel("Games Played : ")) ;
-		black_stats.add(new JLabel("Games Won    : ")) ;
+		black_stats.add(new JLabel("Player Name   : ")) ;
+		black_stats.add(new JLabel("Games Played  : ")) ;
+		black_stats.add(new JLabel("Games Won     : ")) ;
 		
 		white_player.add(white_stats , BorderLayout.WEST) ;
 		black_player.add(black_stats , BorderLayout.WEST) ;
@@ -386,19 +386,20 @@ public class Main extends JFrame implements MouseListener {
 					new_grid[i][j] = new Cell(grid[i][j]) ; 
 				} catch (CloneNotSupportedException e) {
 					e.printStackTrace() ;
+					System.out.println("There is a problem with cloning !! ") ;
 				}
 			}
 		}
 		if(new_grid[to.r][to.c].getPiece() != null) {
 			new_grid[to.r][to.c].removePiece() ; 
 		}
-		new_grid[to.r][to.c].setPiece(grid[from.r][from.c].getPiece()) ;
+		new_grid[to.r][to.c].setPiece(new_grid[from.r][from.c].getPiece()) ;
 		if(new_grid[from.r][from.c].getPiece() instanceof King) {
 			((King)(new_grid[to.r][to.c].getPiece())).setRow(to.r) ;
 			((King)(new_grid[to.r][to.c].getPiece())).setCol(to.c) ;
 		}
 		new_grid[from.r][from.c].removePiece() ; 
-		if(((King)new_grid[to.r][to.c].getPiece()).IsKingInDanger(new_grid) == false) {
+		if(((King)(new_grid[getKing(turn).getRow()][getKing(turn).getCol()].getPiece())).IsKingInDanger(new_grid) == false) {
 			return false ;
 		}
 		return true ;

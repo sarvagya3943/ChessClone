@@ -12,7 +12,7 @@ import pieces.Piece;
 /*
  * Individual cells that make up the game board 
  */
-public class Cell extends JPanel {
+public class Cell extends JPanel implements Cloneable {
 
 	private static final long serialVersionUID = 1L ;
 	public int r,c ; // everybody needs access to this  
@@ -54,9 +54,10 @@ public class Cell extends JPanel {
 	}
 	
 	// add the piece and its image to the cell panel 
-	public void setPiece(Piece piece) {
-		this.piece = piece ; 
-		ImageIcon image = new ImageIcon(piece.getPath()) ; 
+	public void setPiece(Piece p) {
+		this.piece = p ; 
+		ImageIcon image = new javax.swing.ImageIcon(this.getClass().getResource(p.getPath())) ; 
+		//ImageIcon image = new ImageIcon(piece.getPath()) ; 
 		label = new JLabel(image) ; 
 		this.add(label) ; 
 	}
