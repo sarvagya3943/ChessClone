@@ -10,12 +10,12 @@ public class TimerStuff {
 	
 	private JLabel label ; 
 	Timer countDown ;
-	private int remainingTime ; 
+	int remainingTime ; 
 	
 	public TimerStuff(JLabel label) {
 		this.label = label ; 
 		countDown = new Timer(1000, new countDownListener()) ; 
-		this.remainingTime = Main.remainingTime ; 
+		//remainingTime = Main.TimeRemaining ; 
 	}
 	
 	public void startTimer() {
@@ -23,7 +23,7 @@ public class TimerStuff {
 	}
 	
 	public void resetTimer() {
-		this.remainingTime = Main.remainingTime ; 
+		//remainingTime = Main.TimeRemaining ; 
 	}
 	
 	class countDownListener implements ActionListener {
@@ -47,7 +47,7 @@ public class TimerStuff {
 				label.setText("Time is Up chutiye") ; 
 				resetTimer() ; 
 				startTimer() ; 
-				Main.gameBoard.changeTurns() ; 
+				((Main) Main.gameBoard).changeTurns() ; 
 			}
 			
 		}
