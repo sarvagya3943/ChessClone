@@ -16,6 +16,7 @@ import java.awt.event.MouseListener;
 import java.awt.image.BufferedImage;
 import java.io.IOException;
 import java.util.ArrayList;
+import java.util.Iterator;
 
 import javax.imageio.ImageIO;
 import javax.swing.BorderFactory;
@@ -79,7 +80,7 @@ public class Main extends JFrame implements MouseListener {
 	private JComboBox<String> white_com , black_com ; 
 	public static int TimeRemaining = 60 ; // in seconds
 	private TimerStuff timer ;
-	private Player whitePlayer , blackPlayer ; 
+	private Player whitePlayer , blackPlayer , tempPlayer ; 
 	private Button start , white_select , black_select , white_new_player , black_new_player ; 
 	private String white_name , black_name , winner_name ; 
 	private JSlider timeSlider ; 
@@ -660,8 +661,53 @@ public class Main extends JFrame implements MouseListener {
 		@Override
 		public void actionPerformed(ActionEvent arg0) {
 
+			tempPlayer = null ; 
+			String curString = (color == PieceColor.WHITE) ? white_name : black_name ;  
+			JComboBox<String> jC = (color == PieceColor.WHITE) ? white_com : black_com ; 
+			JComboBox<String> ojC = (color == PieceColor.WHITE) ? black_com : white_com ; 
+			ArrayList<Player> players = (color == PieceColor.WHITE) ? white_players : black_players ; 
+			ArrayList<Player> oplayers = players.getPlayers() ; 
+			if(oplayers.isEmpty()) return ; 
+			JPanel details = (color == PieceColor.WHITE) ? white_details : black_details ; 
+			JPanel pl = (color == PieceColor.WHITE) ? white_player : black_player ;
+			if(selectedYet) {
+				details.removeAll() ; 
+			}
+			curString = (String)jC.getSelectedItem() ; 
+			for(Player player : players) {
+				if(player.getName().equals(curString)) {
+					tempPlayer = player ; 
+					break ; 
+				}
+			}
+			Iterator<Player> oit = oplayers.iterator() ; 
+			while(oit.hasNext()) {
+				Player p = oit.next() ;  
+				if(p.getName().equals(curString)) {
+					oplayers.remove(p) ;
+					break ; 
+				}
+			}
+			if(tempPlayer == null) break ; 
+			if(color == PieceColor.WHITE) {
+				whitePlayer = tempPlayer ; 
+			}
+			else blackPlayer = tempPlayer ; 
+			black_players = oplayers ; 
+			ojC.removeAllItems() ; 
+			for(Player player : oplayers) {
+				ojC.addItem(player.getName()) ; 
+			}
 			
+			details.add(new JLabel(" "+tempPlayer.getName()));
+			details.add(new JLabel(" "+tempPlayer.getGamesPlayed()));
+			details.add(new JLabel(" "+tempPlayer.getGamesWon()));
+	
+			pl.revalidate() ; 
+			pl.repaint() ; 
+			pl.add(details) ; 
 			
+			selectedYet = true ; 
 		}
 		
 	}
