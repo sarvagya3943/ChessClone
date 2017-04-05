@@ -1,15 +1,37 @@
 package game;
 
 import java.awt.BorderLayout;
+import java.awt.Button;
 import java.awt.Color;
 import java.awt.Container;
+import java.awt.Dimension;
+import java.awt.FlowLayout;
+import java.awt.Font;
+import java.awt.Graphics;
+import java.awt.GridLayout;
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
 import java.awt.event.MouseEvent;
 import java.awt.event.MouseListener;
+import java.awt.image.BufferedImage;
+import java.io.IOException;
 import java.util.ArrayList;
 
+import javax.imageio.ImageIO;
+import javax.swing.BorderFactory;
+import javax.swing.ImageIcon;
+import javax.swing.JComboBox;
 import javax.swing.JFrame;
+import javax.swing.JLabel;
+import javax.swing.JOptionPane;
+import javax.swing.JPanel;
+import javax.swing.JScrollPane;
+import javax.swing.JSlider;
 import javax.swing.JSplitPane;
 import javax.swing.Timer;
+import javax.swing.border.TitledBorder;
+import javax.swing.event.ChangeEvent;
+import javax.swing.event.ChangeListener;
 
 import pieces.Bishop;
 import pieces.King;
@@ -41,11 +63,28 @@ public class Main extends JFrame implements MouseListener {
 	private ArrayList<Cell> toList = new ArrayList<Cell>() ;
 	
 	private PieceColor turn  = PieceColor.WHITE ;
-	private boolean gameEndedYet = false ;
+	private boolean selectedYet = false , gameEndedYet = false ;
 	
-	private static String playerTurn ; 
+	private JPanel show_time , chess_board , control_panel , TimeDisplay;
+	private JPanel game_not_started , show_player ;  
+	private JPanel white_details , black_details ; 
+	private JPanel black_combo_panel , white_combo_panel ; 
+	private JPanel white_player , black_player ;
+	private ArrayList<String> white_player_names , black_player_names ; 
+	private String[] white_player_Names , black_player_Names ;  
+	private ArrayList<Player> white_players , black_players ; 
+	private static String playerTurn ;
+	private JSplitPane split_bar ; 
+	private JScrollPane white_scroll , black_scroll ; 
+	private JComboBox<String> white_com , black_com ; 
 	public static int TimeRemaining = 60 ; // in seconds
 	private TimerStuff timer ;
+	private Player whitePlayer , blackPlayer ; 
+	private Button start , white_select , black_select , white_new_player , black_new_player ; 
+	private String white_name , black_name , winner_name ; 
+	private JSlider timeSlider ; 
+	private BufferedImage img ; 
+	private JLabel current_move , label , timeSetter , current_player ;
 	
 	private Cell grid[][] ; 
 	// keep track of previous cell
@@ -95,11 +134,114 @@ public class Main extends JFrame implements MouseListener {
 	// Constructor shit 
 	private Main() 
 	{
+		TimeRemaining = 60 ; // 1 minute by default 
+		playerTurn = "White" ;
+		white_name = null ; 
+		black_name = null ; 
+		winner_name = null ; 
+		chess_board = new JPanel(new GridLayout(8, 8)) ; 
+		white_details = new JPanel(new GridLayout(3, 3)) ; 
+		black_details = new JPanel(new GridLayout(3, 3)) ;
+		black_combo_panel = new JPanel() ; 
+		white_combo_panel = new JPanel() ; 
+		white_player_names = new ArrayList<String>() ;
+		black_player_names = new ArrayList<String>() ;
+		
+		chess_board.setMinimumSize(new Dimension(800,700)) ;
+		
+		ImageIcon image = new ImageIcon(this.getClass().getResource("/icon.png"));
+		this.setIconImage(image.getImage()) ;
+		
+		// time slider stuff 
+		timeSlider = new JSlider(1, 15, 1) ; 
+		timeSlider.setMajorTickSpacing(2) ; 
+		timeSlider.setPaintLabels(true) ; 
+		timeSlider.setPaintTicks(true) ; 
+		timeSlider.addChangeListener(new TimeChanges()) ; 
+		
+		/*white_players = Player.getPlayers() ;
+		for(Player player : white_players) {
+			white_player_names.add(player.getName()) ;
+		}
+		black_players = Player.getPlayers() ;
+		for(Player player : black_players) {
+			black_player_names.add(player.getName()) ;
+		}
+		
+		white_player_Names = white_player_names.toArray(white_player_Names) ; 
+		black_player_Names = black_player_names.toArray(black_player_Names) ;
+		*/
+		chess_board.setBorder(BorderFactory.createLoweredBevelBorder());
+		
 		setSize(width, height) ; 
 		setTitle("Chess Game") ;
 		content = getContentPane() ; 
 		content.setBackground(Color.BLACK) ;
 		content.setLayout(new BorderLayout()) ; 
+		
+		control_panel = new JPanel() ; 
+		control_panel.setLayout(new GridLayout(3, 3)) ; 
+		control_panel.setBorder(BorderFactory.createTitledBorder(null, "STATS", TitledBorder.TOP, TitledBorder.CENTER, new Font("Lucida Calligraphy",Font.PLAIN,20), Color.ORANGE)) ;
+		
+		white_player = new JPanel() ; 
+		white_player.setBorder(BorderFactory.createTitledBorder(null, "White Player", TitledBorder.TOP,TitledBorder.CENTER, new Font("times new roman",Font.BOLD,18), Color.RED));
+		white_player.setLayout(new BorderLayout()) ;
+		
+		black_player = new JPanel() ; 
+		black_player.setBorder(BorderFactory.createTitledBorder(null, "Black Player", TitledBorder.TOP,TitledBorder.CENTER, new Font("times new roman",Font.BOLD,18), Color.BLUE));
+		black_player.setLayout(new BorderLayout()) ;
+		
+		JPanel white_stats = new JPanel(new GridLayout()) ; 
+		JPanel black_stats = new JPanel(new GridLayout()) ;
+		
+		/*white_com = new JComboBox<String>(white_player_Names) ;
+		black_com = new JComboBox<String>(black_player_Names) ;*/
+		
+		white_scroll = new JScrollPane(white_com) ;
+		black_scroll = new JScrollPane(black_com) ;
+		
+		white_combo_panel.setLayout(new FlowLayout()) ; 
+		black_combo_panel.setLayout(new FlowLayout()) ;
+		
+		white_select = new Button("Select") ; 
+		black_select = new Button("Select") ; 
+		
+		white_select.addActionListener(new SelectionHandler(PieceColor.WHITE)) ; 
+		black_select.addActionListener(new SelectionHandler(PieceColor.BLACK)) ; 
+		
+		white_new_player = new Button("New Player") ;
+		black_new_player = new Button("New Player") ;
+		
+		white_new_player.addActionListener(new NewHandler(PieceColor.WHITE)) ;
+		black_new_player.addActionListener(new NewHandler(PieceColor.BLACK)) ;
+		
+		// add stuff now 
+		white_combo_panel.add(white_scroll) ; 
+		white_combo_panel.add(white_select) ; 
+		white_combo_panel.add(white_new_player) ;
+		
+		black_combo_panel.add(black_scroll) ;
+		black_combo_panel.add(black_select) ;
+		black_combo_panel.add(black_new_player) ;
+		
+		white_player.add(white_combo_panel , BorderLayout.NORTH) ; 
+		black_player.add(black_combo_panel , BorderLayout.NORTH) ; 
+	
+		white_stats.add(new JLabel("Player Name  : ")) ;
+		white_stats.add(new JLabel("Games Played : ")) ;
+		white_stats.add(new JLabel("Games Won    : ")) ;
+		
+		black_stats.add(new JLabel("Player Name  : ")) ;
+		black_stats.add(new JLabel("Games Played : ")) ;
+		black_stats.add(new JLabel("Games Won    : ")) ;
+		
+		white_player.add(white_stats , BorderLayout.WEST) ;
+		black_player.add(black_stats , BorderLayout.WEST) ;
+		
+		control_panel.add(white_player) ; 
+		control_panel.add(black_player) ;
+		
+		
 		grid = new Cell[8][8] ; 
 		for(int i = 0 ; i < 8 ; ++i) {
 			for(int j = 0 ; j < 8 ; ++j) {
@@ -162,6 +304,52 @@ public class Main extends JFrame implements MouseListener {
 				grid[i][j] = cell ; 
 			}
 		}
+		
+		show_player = new JPanel(new FlowLayout()) ; 
+		show_player.add(timeSlider) ;
+		
+		timeSetter = new JLabel("Set Timer(in minutes) : ") ;
+		timeSetter.setFont(new Font("Arial",Font.BOLD,16)) ;
+		
+		start = new Button("Start") ;
+		start.setBackground(Color.BLACK) ; 
+		start.setForeground(Color.WHITE) ;
+		//start.addActionListener(new GameStarter()) ; 
+		start.setPreferredSize(new Dimension(120,40)) ;
+		
+		label = new JLabel("Time Starts Now" , JLabel.CENTER) ;
+		label.setFont(new Font("SERIF", Font.BOLD, 30)); 
+		
+		TimeDisplay = new JPanel(new FlowLayout()) ; 
+		
+		show_time = new JPanel(new GridLayout(3,3)) ;
+		show_time.add(timeSetter) ; 
+		show_time.add(show_player) ;
+		TimeDisplay.add(start) ; 
+		show_time.add(TimeDisplay) ;
+		control_panel.add(show_time) ;
+		
+		chess_board.setMinimumSize(new Dimension(800, 700)) ;
+		
+		game_not_started = new JPanel() {
+			
+			@Override 
+			public void paintComponent(Graphics g) {
+				try {
+					img = ImageIO.read(this.getClass().getResource("/clash.jpg")) ;
+				} catch (IOException e) {
+					System.out.println(" NOT FOUND :( ") ;
+				}
+				g.drawImage(img, 0, 0, null) ;
+			}
+		} ;
+		game_not_started.setMinimumSize(new Dimension(800, 700)) ; 
+		
+		control_panel.setMinimumSize(new Dimension(285, 700)) ;
+		
+		split_bar = new JSplitPane(JSplitPane.HORIZONTAL_SPLIT , game_not_started , control_panel) ;
+		
+		content.add(split_bar) ;
 		setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE) ;
 		
 	}
@@ -449,6 +637,126 @@ public class Main extends JFrame implements MouseListener {
 	@Override
 	public void mouseReleased(MouseEvent arg0) {
 		// TODO Auto-generated method stub
+		
+	}
+	
+	class TimeChanges implements ChangeListener {
+
+		@Override
+		public void stateChanged(ChangeEvent arg0) {
+
+			TimeRemaining = timeSlider.getValue() * 60 ;
+		
+		}
+		
+	}
+	
+	class SelectionHandler implements ActionListener 
+	{
+		private PieceColor color ; 
+		public SelectionHandler(PieceColor color) {
+			this.color = color ; 
+		}
+		@Override
+		public void actionPerformed(ActionEvent arg0) {
+
+			
+			
+		}
+		
+	}
+	
+	class NewHandler implements ActionListener {
+		private PieceColor color ; 
+		public NewHandler(PieceColor color) {
+			this.color = color ; 
+		}
+		
+		@Override
+		public void actionPerformed(ActionEvent e) {
+			
+			String curString = (color == PieceColor.WHITE) ? white_name : black_name ; 
+			JPanel curPanel = (color == PieceColor.WHITE) ? white_player : black_player ; 
+			JPanel details = (color == PieceColor.WHITE) ? white_details : black_details ;
+			ArrayList<Player> arr = Player.getPlayers() ; 
+			curString = JOptionPane.showInputDialog(curPanel, "Enter your stupid Name") ; 
+			if(curString != null) {
+				for(Player player : arr) {
+					if(player.getName().equals(curString)) {
+						JOptionPane.showMessageDialog(curPanel, "Player already exists -_- ") ; 
+						return ;
+					}
+				}
+				if(curString.length() != 0) {
+					Player res = new Player(curString) ; 
+					res.updatePlayer() ; 
+					if(color == PieceColor.WHITE) {
+						whitePlayer = res ; 
+					}
+					else blackPlayer = res ;
+				}
+				else return ; 
+			}
+			else return ; 
+			
+			details.removeAll() ; 
+			details.add(new JLabel(" " + curString)) ;
+			details.add(new JLabel(" 0")) ;
+			details.add(new JLabel(" 0")) ;
+			
+			curPanel.revalidate() ;
+			curPanel.repaint() ; 
+			curPanel.add(details) ;
+			
+			selectedYet = true ; 
+		}
+		
+	}
+	
+	class GameStarter implements ActionListener {
+
+		@SuppressWarnings("deprecation")
+		@Override
+		public void actionPerformed(ActionEvent e) {
+
+			if(whitePlayer == null || blackPlayer == null) {
+				JOptionPane.showMessageDialog(control_panel, "Details to bhar de chutiye") ;
+				return ; 
+			}
+			
+			whitePlayer.updateGamesPlayed() ; 
+			whitePlayer.updatePlayer() ; 
+			
+			blackPlayer.updateGamesPlayed() ; 
+			blackPlayer.updatePlayer() ; 
+			
+			white_new_player.disable() ; 
+			black_new_player.disable() ;
+			
+			white_select.disable() ; 
+			black_select.disable() ;
+			
+			split_bar.remove(game_not_started) ;
+			split_bar.add(chess_board) ; 
+			
+			show_player.remove(timeSlider) ;
+			current_move = new JLabel("MOVE : ") ;
+			current_move.setFont(new Font("Comic Sans MS", Font.PLAIN ,20)) ; 
+			current_move.setForeground(Color.RED) ; 
+			show_player.add(current_move) ; 
+			
+			current_player = new JLabel(playerTurn) ; 
+			current_player.setFont(new Font("Comic Sans MS", Font.BOLD ,20)) ; 
+			current_player.setForeground(Color.BLUE) ; 
+			show_player.add(current_player) ;
+			
+			TimeDisplay.remove(start) ; 
+			TimeDisplay.add(label) ; 
+			
+			timer = new TimerStuff(label) ; 
+			timer.startTimer() ;
+			
+		}
 		
 	}
 }
