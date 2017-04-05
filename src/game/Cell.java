@@ -28,7 +28,8 @@ public class Cell extends JPanel implements Cloneable {
 		this.c = c ; 
 		
 		if((r + c) % 2 == 0) {
-			setBackground(new Color(113,198,113)) ;
+			// setBackground(new Color(113,198,113)) ;
+			setBackground(new Color(55, 200, 170)) ;
 		}
 		else {
 			setBackground(Color.WHITE) ; 
@@ -44,7 +45,8 @@ public class Cell extends JPanel implements Cloneable {
 		this.r = cell.r ; 
 		this.c = cell.c ; 
 		if((r + c) % 2 == 0) {
-			setBackground(new Color(113,198,113)) ; 
+			// setBackground(new Color(113,198,113)) ; 
+			setBackground(new Color(55, 200, 170)) ;
 		}
 		else setBackground(Color.WHITE) ; 
 		if(cell.getPiece() != null) {
@@ -80,7 +82,7 @@ public class Cell extends JPanel implements Cloneable {
 	}
 	
 	public void select() {
-		this.setBorder(BorderFactory.createLineBorder(Color.RED, 6)) ;
+		this.setBorder(BorderFactory.createLineBorder(new Color(249, 52, 70), 6)) ;
 		this.isSelected = true ; 
 	}
 	
@@ -94,7 +96,7 @@ public class Cell extends JPanel implements Cloneable {
 	}
 	
 	public void setPosDestination() {
-		this.setBorder(BorderFactory.createLineBorder(Color.blue, 4)) ;
+		this.setBorder(BorderFactory.createLineBorder(new Color(0, 51, 102), 4)) ;
 		this.isPossibleDestination = true ;
 	}
 	
@@ -104,7 +106,7 @@ public class Cell extends JPanel implements Cloneable {
 	}
 	
 	public void setCheck() {
-		this.setBackground(Color.RED) ;
+		this.setBackground(new Color(249, 52, 70)) ;
 		this.isCheck = true ; 
 	}
 	
@@ -115,7 +117,8 @@ public class Cell extends JPanel implements Cloneable {
 	public void removeCheck() {
 		this.setBorder(null) ; 
 		if((r + c) % 2 == 0) {
-			setBackground(new Color(113,198,113)) ;
+			// setBackground(new Color(113,198,113)) ;
+			setBackground(new Color(55, 200, 170)) ;
 		}
 		else {
 			setBackground(Color.WHITE) ; 

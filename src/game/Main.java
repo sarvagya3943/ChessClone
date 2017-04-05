@@ -184,7 +184,7 @@ public class Main extends JFrame implements MouseListener {
 		
 		control_panel = new JPanel() ; 
 		control_panel.setLayout(new GridLayout(3, 3)) ; 
-		control_panel.setBorder(BorderFactory.createTitledBorder(null, "STATS", TitledBorder.TOP, TitledBorder.CENTER, new Font("Lucida Calligraphy",Font.PLAIN,20), Color.ORANGE)) ;
+		control_panel.setBorder(BorderFactory.createTitledBorder(null, "STATISTICS", TitledBorder.TOP, TitledBorder.CENTER, new Font("Lucida Calligraphy",Font.PLAIN,20), new Color(255, 87, 51))) ;
 		
 		white_player = new JPanel() ; 
 		white_player.setBorder(BorderFactory.createTitledBorder(null, "White Player", TitledBorder.TOP,TitledBorder.CENTER, new Font("times new roman",Font.BOLD,18), Color.RED));
@@ -313,10 +313,10 @@ public class Main extends JFrame implements MouseListener {
 		show_player = new JPanel(new FlowLayout()) ; 
 		show_player.add(timeSlider) ;
 		
-		timeSetter = new JLabel("Set Timer(in minutes) : ") ;
+		timeSetter = new JLabel("Set Timer(in minutes) : " , JLabel.CENTER) ;
 		timeSetter.setFont(new Font("Arial",Font.BOLD,16)) ;
 		
-		start = new Button("Start") ;
+		start = new Button("START") ;
 		start.setBackground(Color.BLACK) ; 
 		start.setForeground(Color.WHITE) ;
 		start.addActionListener(new GameStarter()) ; 
