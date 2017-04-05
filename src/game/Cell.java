@@ -1,5 +1,8 @@
 package game;
 
+import java.awt.Color;
+
+import javax.swing.BorderFactory;
 import javax.swing.ImageIcon;
 import javax.swing.JLabel;
 import javax.swing.JPanel;
@@ -14,15 +17,39 @@ public class Cell extends JPanel {
 	public int r,c ; // everybody needs access to this  
 	private Piece piece ; 
 	private JLabel label ; 
-
+	private boolean isCheck = false ;
+	private boolean isSelected = false ;
+	private boolean isPossibleDestination = false ;
+	
 	// Class Constructor 
 	public Cell(int r,int c,Piece piece) {
 		this.r = r ; 
 		this.c = c ; 
 		
+		if((r + c) % 2 == 0) {
+			setBackground(new Color(113,198,113)) ;
+		}
+		else {
+			setBackground(Color.WHITE) ; 
+		}
+		
 		if(piece != null) {
 			setPiece(piece) ; 
 		}
+	}
+	
+	public Cell(Cell cell) throws CloneNotSupportedException
+	{
+		this.r = cell.r ; 
+		this.c = cell.c ; 
+		if((r + c) % 2 == 0) {
+			setBackground(new Color(113,198,113)) ; 
+		}
+		else setBackground(Color.WHITE) ; 
+		if(cell.getPiece() != null) {
+			setPiece(cell.getPiece().getcopy()) ; 
+		}
+		else piece = null ; 
 	}
 	
 	// add the piece and its image to the cell panel 
@@ -44,5 +71,53 @@ public class Cell extends JPanel {
 	public void removePiece() {
 		this.piece = null ; 
 		this.remove(label) ;
+	}
+	
+	public boolean isSelected() {
+		return this.isSelected ;
+	}
+	
+	public void select() {
+		this.setBorder(BorderFactory.createLineBorder(Color.RED, 6)) ;
+		this.isSelected = true ; 
+	}
+	
+	public void deselect() {
+		this.setBorder(null) ; 
+		this.isSelected = false ;
+	}
+	
+	public boolean isPosDestination() {
+		return isPossibleDestination ; 
+	}
+	
+	public void setPosDestination() {
+		this.setBorder(BorderFactory.createLineBorder(Color.blue, 4)) ;
+		this.isPossibleDestination = true ;
+	}
+	
+	public void removePosDestination() {
+		this.setBorder(null) ; 
+		this.isPossibleDestination = false ;
+	}
+	
+	public void setCheck() {
+		this.setBackground(Color.RED) ;
+		this.isCheck = true ; 
+	}
+	
+	public boolean isCheck() {
+		return this.isCheck ; 
+	}
+	
+	public void removeCheck() {
+		this.setBorder(null) ; 
+		if((r + c) % 2 == 0) {
+			setBackground(new Color(113,198,113)) ;
+		}
+		else {
+			setBackground(Color.WHITE) ; 
+		}
+		this.isCheck = false ;
 	}
 }
