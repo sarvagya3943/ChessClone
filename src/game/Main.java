@@ -230,13 +230,13 @@ public class Main extends JFrame implements MouseListener {
 		white_player.add(white_combo_panel , BorderLayout.NORTH) ; 
 		black_player.add(black_combo_panel , BorderLayout.NORTH) ; 
 	
-		white_stats.add(new JLabel("Player Name   : ")) ;
+		white_stats.add(new JLabel("Player Name    : ")) ;
 		white_stats.add(new JLabel("Games Played  : ")) ;
-		white_stats.add(new JLabel("Games Won     : ")) ;
+		white_stats.add(new JLabel("Games Won      : ")) ;
 		
-		black_stats.add(new JLabel("Player Name   : ")) ;
+		black_stats.add(new JLabel("Player Name    : ")) ;
 		black_stats.add(new JLabel("Games Played  : ")) ;
-		black_stats.add(new JLabel("Games Won     : ")) ;
+		black_stats.add(new JLabel("Games Won      : ")) ;
 		
 		white_player.add(white_stats , BorderLayout.WEST) ;
 		black_player.add(black_stats , BorderLayout.WEST) ;
@@ -410,6 +410,7 @@ public class Main extends JFrame implements MouseListener {
 	private ArrayList<Cell> KingFilter(ArrayList<Cell> arr , Cell from) {
 		ArrayList<Cell> res = new ArrayList<Cell>() ; 
 		Cell new_grid[][] = new Cell[8][8] ; 
+		int x , y ; 
 		for(Cell cell : arr) {
 			for(int i = 0 ; i < 8 ; ++i) {
 				for(int j = 0 ; j < 8 ; ++j) {
@@ -424,12 +425,15 @@ public class Main extends JFrame implements MouseListener {
 				new_grid[cell.r][cell.c].removePiece() ; 
 			}
 			new_grid[cell.r][cell.c].setPiece(grid[from.r][from.c].getPiece()) ;
+			x = getKing(turn).getRow() ; 
+			y = getKing(turn).getCol() ; 
 			if(new_grid[from.r][from.c].getPiece() instanceof King) {
 				((King)(new_grid[cell.r][cell.c].getPiece())).setRow(cell.r) ;
 				((King)(new_grid[cell.r][cell.c].getPiece())).setCol(cell.c) ;
+				x = cell.r ; y = cell.c ; 
 			}
 			new_grid[from.r][from.c].removePiece() ; 
-			if(((King)new_grid[cell.r][cell.c].getPiece()).IsKingInDanger(new_grid) == false) {
+			if(((King)new_grid[x][y].getPiece()).IsKingInDanger(new_grid) == false) {
 				res.add(cell) ; 
 			}
 		}
@@ -469,9 +473,10 @@ public class Main extends JFrame implements MouseListener {
 		return PieceColor.WHITE ;
 	}
 	
-	private int DuringCheckFilter(ArrayList<Cell> arr , Cell from , PieceColor color) {
-		int res = 0 ;
+	private ArrayList<Cell> DuringCheckFilter(ArrayList<Cell> arr , Cell from , PieceColor color) {
+		ArrayList<Cell> res = new ArrayList<Cell>() ;
 		Cell new_grid[][] = new Cell[8][8] ; 
+		int x , y ; 
 		for(Cell cell : arr) {
 			for(int i = 0 ; i < 8 ; ++i) {
 				for(int j = 0 ; j < 8 ; ++j) {
@@ -486,29 +491,31 @@ public class Main extends JFrame implements MouseListener {
 				new_grid[cell.r][cell.c].removePiece() ; 
 			}
 			new_grid[cell.r][cell.c].setPiece(grid[from.r][from.c].getPiece()) ;
-			if(new_grid[from.r][from.c].getPiece() instanceof King) {
+			x = getKing(color).getRow() ; 
+			y = getKing(color).getCol() ; 
+			if(new_grid[cell.r][cell.c].getPiece() instanceof King) {
 				((King)(new_grid[cell.r][cell.c].getPiece())).setRow(cell.r) ;
 				((King)(new_grid[cell.r][cell.c].getPiece())).setCol(cell.c) ;
+				x = cell.r ; 
+				y = cell.c ; 
 			}
 			new_grid[from.r][from.c].removePiece() ; 
-			if(((King)new_grid[cell.r][cell.c].getPiece()).IsKingInDanger(new_grid) == false) {
-				res++ ; 
+			if(((King)new_grid[x][y].getPiece()).IsKingInDanger(new_grid) == false) {
+				res.add(cell) ; 
 			}
-			if(res > 0) return res ; 
 		}
 		return res ; 
 	}
 	
 	public boolean CheckMate(PieceColor color) {
 		ArrayList<Cell> arr = new ArrayList<Cell>() ;
-		int availableMoves = 0 ; 
 		for(int i = 0 ; i < 8 ; ++i) {
 			for(int j = 0 ; j < 8 ; ++j) {
 				if(grid[i][j].getPiece() != null && grid[i][j].getPiece().getColor() == color) {
 					arr.clear() ;
 					arr = grid[i][j].getPiece().getMoves(grid, i, j) ;
-					availableMoves = DuringCheckFilter(arr,grid[i][j],color) ; 
-					if(availableMoves != 0) return false ;
+					arr = DuringCheckFilter(arr,grid[i][j],color) ; 
+					if(arr.size() != 0) return false ;
 				}
 			}
 		}
