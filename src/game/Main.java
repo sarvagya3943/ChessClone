@@ -184,14 +184,14 @@ public class Main extends JFrame implements MouseListener {
 		
 		control_panel = new JPanel() ; 
 		control_panel.setLayout(new GridLayout(3, 3)) ; 
-		control_panel.setBorder(BorderFactory.createTitledBorder(null, "STATISTICS", TitledBorder.TOP, TitledBorder.CENTER, new Font("Lucida Calligraphy",Font.PLAIN,20), new Color(255, 87, 51))) ;
+		control_panel.setBorder(BorderFactory.createTitledBorder(null, "STATISTICS", TitledBorder.TOP, TitledBorder.CENTER, new Font(Font.MONOSPACED,Font.PLAIN,20), new Color(255, 87, 51))) ;
 		
 		white_player = new JPanel() ; 
-		white_player.setBorder(BorderFactory.createTitledBorder(null, "White Player", TitledBorder.TOP,TitledBorder.CENTER, new Font("times new roman",Font.BOLD,18), Color.RED));
+		white_player.setBorder(BorderFactory.createTitledBorder(null, "White Player", TitledBorder.TOP,TitledBorder.CENTER, new Font(Font.MONOSPACED,Font.BOLD,18), Color.RED));
 		white_player.setLayout(new BorderLayout()) ;
 		
 		black_player = new JPanel() ; 
-		black_player.setBorder(BorderFactory.createTitledBorder(null, "Black Player", TitledBorder.TOP,TitledBorder.CENTER, new Font("times new roman",Font.BOLD,18), Color.BLUE));
+		black_player.setBorder(BorderFactory.createTitledBorder(null, "Black Player", TitledBorder.TOP,TitledBorder.CENTER, new Font(Font.MONOSPACED,Font.BOLD,18), Color.BLUE));
 		black_player.setLayout(new BorderLayout()) ;
 		
 		JPanel white_stats = new JPanel(new GridLayout(3,3)) ; 
@@ -314,7 +314,7 @@ public class Main extends JFrame implements MouseListener {
 		show_player.add(timeSlider) ;
 		
 		timeSetter = new JLabel("Set Timer(in minutes) : " , JLabel.CENTER) ;
-		timeSetter.setFont(new Font("Arial",Font.BOLD,16)) ;
+		//timeSetter.setFont(new Font("Arial",Font.BOLD,16)) ;
 		
 		start = new Button("START") ;
 		start.setBackground(Color.BLACK) ; 
@@ -323,7 +323,7 @@ public class Main extends JFrame implements MouseListener {
 		start.setPreferredSize(new Dimension(120,40)) ;
 		
 		label = new JLabel("Time Starts Now" , JLabel.CENTER) ;
-		label.setFont(new Font("SERIF", Font.BOLD, 30)); 
+		label.setFont(new Font(Font.MONOSPACED, Font.BOLD, 30)); 
 		
 		TimeDisplay = new JPanel(new FlowLayout()) ; 
 		
@@ -359,25 +359,36 @@ public class Main extends JFrame implements MouseListener {
 		
 	}
 
+	/*
+	 * Returns king  of a particular color 
+	 */
 	private King getKing(PieceColor color) {
 		if(color == PieceColor.WHITE) {
 			return white_king ; 
 		}
 		return black_king ; 
 	}
-	
+	/*
+	 * Remove cells from the "destination" list 
+	 * which is essentially removing the borders xD
+	 */
 	private void cleanToList(ArrayList<Cell> arr) {
 		for(Cell cell : arr) { 
 			cell.removePosDestination() ; 
 		}
 	}
-	
+	/*
+	 * Set cells in the destination list as a possible destination 
+	 * which is essentially applying a border 
+	 */
 	private void highlightToList(ArrayList<Cell> arr) {
 		for(Cell cell : arr) {
 			cell.setPosDestination() ; 
 		}
 	}
-	
+	/*
+	 * With the current move , will the king be in danger ? 
+	 */
 	private boolean WillKingBeInDanger(Cell from ,Cell to) {
 		Cell new_grid[][] = new Cell[8][8] ; 
 		for(int i = 0 ; i < 8 ; ++i) {
@@ -439,7 +450,9 @@ public class Main extends JFrame implements MouseListener {
 		}
 		return res ; 
 	}
-	
+	/*
+	 * change turns from black to white or vice-versa 
+	 */
 	public void changeTurns() {
 		if(grid[getKing(turn).getRow()][getKing(turn).getCol()].isCheck()) {
 			turn = Othercolor(turn) ; 
@@ -465,7 +478,10 @@ public class Main extends JFrame implements MouseListener {
 			show_player.add(current_player) ; 
 		}
 	}
-	
+	/*
+	 * returns BLACK if color is WHITE 
+	 * otherwise returns WHITE 
+	 */
 	PieceColor Othercolor(PieceColor color) {
 		if(color == PieceColor.WHITE) {
 			return PieceColor.BLACK ; 
@@ -506,7 +522,9 @@ public class Main extends JFrame implements MouseListener {
 		}
 		return res ; 
 	}
-	
+	/*
+	 * Checks if checkmate has happened or not !
+	 */
 	public boolean CheckMate(PieceColor color) {
 		ArrayList<Cell> arr = new ArrayList<Cell>() ;
 		for(int i = 0 ; i < 8 ; ++i) {
@@ -521,7 +539,9 @@ public class Main extends JFrame implements MouseListener {
 		}
 		return true ;
 	}
-	
+	/*
+	 * stuff to do when game ends 
+	 */
 	private void GameEnded() {
 		cleanToList(toList) ; 
 		TimeDisplay.disable() ; 
@@ -566,7 +586,11 @@ public class Main extends JFrame implements MouseListener {
 		gameBoard.setVisible(true) ; 
 		gameBoard.setResizable(false) ; 
 	}
-	
+	/*
+	 * (non-Javadoc)
+	 * @see java.awt.event.MouseListener#mouseClicked(java.awt.event.MouseEvent)
+	 * What do you want to do when a mouse click happens ? 
+	 */
 	@Override
 	public void mouseClicked(MouseEvent arg0) {
 		
@@ -668,7 +692,11 @@ public class Main extends JFrame implements MouseListener {
 			((King)temp.getPiece()).setCol(temp.c) ; 
 		}
 	}
-
+	/*
+	 * (non-Javadoc)
+	 * @see java.awt.event.MouseListener#mouseEntered(java.awt.event.MouseEvent)
+	 * Dont capture rest of the mouse events 
+	 */
 	@Override
 	public void mouseEntered(MouseEvent arg0) {
 		// TODO Auto-generated method stub
@@ -838,13 +866,14 @@ public class Main extends JFrame implements MouseListener {
 			split_bar.add(chess_board) ; 
 			
 			show_player.remove(timeSlider) ;
+			show_time.remove(timeSetter) ; 
 			current_move = new JLabel("MOVE : ") ;
-			current_move.setFont(new Font("Comic Sans MS", Font.PLAIN ,20)) ; 
+			current_move.setFont(new Font(Font.MONOSPACED, Font.PLAIN ,20)) ; 
 			current_move.setForeground(Color.RED) ; 
 			show_player.add(current_move) ; 
 			
 			current_player = new JLabel(playerTurn) ; 
-			current_player.setFont(new Font("Comic Sans MS", Font.BOLD ,20)) ; 
+			current_player.setFont(new Font(Font.MONOSPACED, Font.BOLD ,20)) ; 
 			current_player.setForeground(Color.BLUE) ; 
 			show_player.add(current_player) ;
 			
