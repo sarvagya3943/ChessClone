@@ -469,7 +469,6 @@ public class Main extends JFrame implements MouseListener {
 		if(!gameEndedYet && timer != null) {
 			timer.resetTimer() ; 
 			timer.startTimer() ; 
-			show_player.remove(current_player) ; 
 			if(Main.playerTurn == "White") {
 				Main.playerTurn = "Black" ; 
 			}
@@ -506,7 +505,7 @@ public class Main extends JFrame implements MouseListener {
 			if(new_grid[cell.r][cell.c].getPiece() != null) {
 				new_grid[cell.r][cell.c].removePiece() ; 
 			}
-			new_grid[cell.r][cell.c].setPiece(grid[from.r][from.c].getPiece()) ;
+			new_grid[cell.r][cell.c].setPiece(new_grid[from.r][from.c].getPiece()) ;
 			x = getKing(color).getRow() ; 
 			y = getKing(color).getCol() ; 
 			if(new_grid[cell.r][cell.c].getPiece() instanceof King) {
@@ -560,7 +559,7 @@ public class Main extends JFrame implements MouseListener {
 			winner_name = blackPlayer.getName() ; 
 		}
 		
-		JOptionPane.showMessageDialog(chess_board, "Checkmate !!!\n" + winner_name + "wins :)" ) ; 
+		JOptionPane.showMessageDialog(chess_board, "Checkmate !!!\n" + winner_name + " wins :)" ) ; 
 		white_player.remove(white_details) ; 
 		black_player.remove(black_details) ;
 		TimeDisplay.remove(label) ;
