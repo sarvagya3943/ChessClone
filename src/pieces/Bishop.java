@@ -6,7 +6,8 @@ import java.util.ArrayList;
 
 /*
  * Bishop class (or the "camel" class for the hindi medium people) 
- * can only move diagonally 
+ * can only move diagonally
+ * Some extra comment
  */
 
 public class Bishop extends Piece {

@@ -7,7 +7,8 @@ import java.util.ArrayList;
 
 /*
  * King class (or "Raja" for hindi medium people)
- * Can move 1 step in any direction 
+ * Can move 1 step in any direction
+ * some extra comment
  */ 
 
 public class King extends Piece {
